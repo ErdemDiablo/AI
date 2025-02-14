@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #1e1e2f; color: white; }
+        .chatbox { width: 400px; margin: 50px auto; background: #2a2a3a; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .messages { max-height: 300px; overflow-y: auto; text-align: left; padding: 10px; }
+        .message { padding: 10px; border-radius: 10px; margin: 5px 0; }
+        .user { background: #6c63ff; text-align: right; }
+        .bot { background: #5750d3; text-align: left; }
+        input, button { padding: 10px; margin: 5px; border-radius: 5px; border: none; }
+        button { background: #6c63ff; color: white; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="chatbox">
+        <h2>Chatbot</h2>
+        <div class="messages" id="messages"></div>
+        <input type="text" id="chatInput" placeholder="Mesajınızı yazın...">
+        <button onclick="sendMessage()">Gönder</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var input = document.getElementById("chatInput");
+            var messages = document.getElementById("messages");
+
+            if (input.value.trim() !== "") {
+                var userMessage = document.createElement("div");
+                userMessage.classList.add("message", "user");
+                userMessage.textContent = "Sen: " + input.value;
+                messages.appendChild(userMessage);
+
+                fetch("http://127.0.0.1:5000/chatbot", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: input.value })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var botMessage = document.createElement("div");
+                    botMessage.classList.add("message", "bot");
+                    botMessage.textContent = "Bot: " + data.response;
+                    messages.appendChild(botMessage);
+                    messages.scrollTop = messages.scrollHeight;
+                });
+
+                input.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
