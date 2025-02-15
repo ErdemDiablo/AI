@@ -17,11 +17,12 @@
             justify-content: center;
             align-items: center;
             background-color: #021d42; /* Dark cold blue tema */
-            background-image: url('karlimanzara.jpg'); /* Arka plan resmi */
+            /*background-image: url('karlimanzara.jpg'); /* Arka plan resmi */
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            /*transition: background-color 0.3s ease, color 0.3s ease;*/
+            transition: background-image 1s ease-in-out, opacity 0.5s ease-in-out;
         }
         .container {
             display: flex;
@@ -162,6 +163,35 @@
             margin-bottom: 20px;
             color: #b0b0b0;
         }
+        .cbg {
+            background-color: #444;
+            border: none;
+            color: white;
+            padding: 15px;
+            margin: 5px 0;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .cbg:hover {
+            background-color: #5750d3;
+            transform: scale(1.05);
+        }
+
+        /* Bot Menüsüne Hover Etme */
+        .cbg:active {
+            background-color: #4a45c9;
+        }
+
+        /* Bot Menüsüne Basılınca Animasyon */
+        .cbg:focus {
+            outline: none;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.6);
+        }
     </style>
 </head>
 <body>
@@ -173,6 +203,8 @@
             <button class="panel-button" onclick="selectBot('Bot 2')">Bot 2</button>
             <button class="panel-button" onclick="selectBot('Bot 3')">Bot 3</button>
             <button class="panel-button" onclick="selectBot('Bot 4')">Bot 4</button>
+            <button class="cbg" onclick="changeBg()">Change Background</button>
+            <!--<button class="cbg" onclick="changeBg()">Change Background</button>-->
         </div>
         <div class="chat-container" id="chatContainer">
             <div class="messages" id="messages">
@@ -215,6 +247,27 @@
         function selectBot(botName) {
             // Bot seçildiğinde herhangi bir şey yapmıyoruz artık, sadece tema sabit kaldı
         }
+
+        const backgrounds = [
+            "url('karlimanzara.jpg')",
+            "url('karlimanzara2.jpg')",
+            "url('karlimanzara3.jpg')",
+        ];
+        
+        let index = 0;
+
+        function changeBg() 
+        {
+            document.body.style.opacity = 0; // Önce saydam yap
+        setTimeout(() => {
+            document.body.style.backgroundImage = backgrounds[index]; // Yeni arka planı ekle
+            document.body.style.opacity = 1; // Geri görünür yap
+            index = (index + 1) % backgrounds.length; // Indexi artır
+        }, 500); // 0.5 saniye beklet, smooth geçiş sağla
+        }
+
+
+
     </script>
 </body>
 </html>
