@@ -192,6 +192,90 @@
             outline: none;
             box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.6);
         }
+        .drop-area {
+            position: fixed;
+            top: 35%;
+            left: 10%;
+            width: 80%;
+            padding: 80px;
+            margin-top: 10px;
+            border: 8px dashed #6c63ff;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .drop-area:hover {
+            background-color: rgba(108, 99, 255, 0.2);
+        }
+        .cbgPanel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Ekranın tam ortasına yerleştirir */
+            width: 900px;
+            height: 600px;
+            padding: 20px;
+            background-color: rgba(2, 29, 66, 0.9);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            display: none; /* Başlangıçta gizli */
+            opacity: 0; /* Başlangıçta şeffaf */
+            transition: opacity 0.5s ease, transform 0.5s ease; /* Geçiş sürelerini yumuşatıyoruz */
+        }
+
+        /* Panel açıldığında */
+        .cbgPanel.open {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1); /* Yavaşça normal boyutuna gelir */
+        }
+
+        /* Buton stil */
+        .open-.cbgPanel-btn {
+            padding: 10px 20px;
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .open-.cbgPanel-btn:hover {
+            background-color: #5750d3;
+        }
+
+        /* Panel başlık */
+        .cbgPanel h2 {
+            position: fixed;
+            left: 25%;
+            font-size: 20px;
+            margin-bottom: 10px;
+            transform: translate(50%, 50%);
+        }
+
+        /* Panel içerik */
+        .cbgPanel p {
+            font-size: 16px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 40px; /* Kapatma butonunu büyütüyoruz */
+            color: white;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #ff4d4d; /* Kapanma butonuna hover efekti */
+        }
     </style>
 </head>
 <body>
@@ -203,8 +287,9 @@
             <button class="panel-button" onclick="selectBot('Bot 2')">Bot 2</button>
             <button class="panel-button" onclick="selectBot('Bot 3')">Bot 3</button>
             <button class="panel-button" onclick="selectBot('Bot 4')">Bot 4</button>
-            <button class="cbg" onclick="changeBg()">Change Background</button>
+            <button class="cbg" onclick="togglePanel()">Change Background</button>
             <!--<button class="cbg" onclick="changeBg()">Change Background</button>-->
+            
         </div>
         <div class="chat-container" id="chatContainer">
             <div class="messages" id="messages">
@@ -215,6 +300,13 @@
                 <button onclick="sendMessage()">Gönder</button>
             </div>
         </div>
+    </div>
+    <div class="cbgPanel" id="myPanel">
+        <h2>Lütfen Arkaplan Seçin</h2>
+        <button class="close-btn" onclick="togglePanel()">×</button> <!-- Kapatma butonu -->
+        <!--<p>Bu paneli açmak ve kapatmak için butona tıkladınız.</p>-->
+        <div class="drop-area" id="dropArea">Arka plan yüklemek için sürükleyin</div>
+        <input type="file" id="fileInput" accept="image/png, image/jpeg" hidden>
     </div>
 
     <script>
@@ -256,15 +348,56 @@
         
         let index = 0;
 
-        function changeBg() 
+        function togglePanel() 
         {
-            document.body.style.opacity = 0; // Önce saydam yap
-        setTimeout(() => {
-            document.body.style.backgroundImage = backgrounds[index]; // Yeni arka planı ekle
-            document.body.style.opacity = 1; // Geri görünür yap
-            index = (index + 1) % backgrounds.length; // Indexi artır
-        }, 500); // 0.5 saniye beklet, smooth geçiş sağla
+            var panel = document.getElementById("myPanel");
+            panel.classList.toggle("open");
         }
+
+        const dropArea = document.getElementById("dropArea");
+        const fileInput = document.getElementById("fileInput");
+
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.style.backgroundColor = "rgba(108, 99, 255, 0.1)";
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.style.backgroundColor = "";
+        });
+
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.style.backgroundColor = "";
+
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // Load image as background
+                    document.body.style.backgroundImage = `url(${event.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert("Lütfen bir resim dosyası yükleyin.");
+            }
+        });
+
+        // Allow the input to work if the file input is triggered
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // Load image as background
+                    document.body.style.backgroundImage = `url(${event.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        
 
 
 
