@@ -48,7 +48,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border-radius: 15px;
+            border-radius: 15px; 
             margin-left: 10px;
             padding: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
@@ -276,10 +276,31 @@
         .close-btn:hover {
             color: #ff4d4d; /* Kapanma butonuna hover efekti */
         }
+        
+
+        .signup-button {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #2929386a;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .signup-button:hover {
+            background-color: #5750d3;
+            transform: scale(1.05);
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
+    <button class="signup-button" onclick="signup()">Sign Up</button>
+    <div class="container">  
         <div class="panel">
             <h2>Bot Menüsü</h2>
             <!-- 4 Bot Menüsü -->
@@ -289,7 +310,7 @@
             <button class="panel-button" onclick="selectBot('Bot 4')">Bot 4</button>
             <button class="cbg" onclick="togglePanel()">Change Background</button>
             <!--<button class="cbg" onclick="changeBg()">Change Background</button>-->
-            
+        
         </div>
         <div class="chat-container" id="chatContainer">
             <div class="messages" id="messages">
@@ -340,13 +361,6 @@
             // Bot seçildiğinde herhangi bir şey yapmıyoruz artık, sadece tema sabit kaldı
         }
 
-        const backgrounds = [
-            "url('karlimanzara.jpg')",
-            "url('karlimanzara2.jpg')",
-            "url('karlimanzara3.jpg')",
-        ];
-        
-        let index = 0;
 
         function togglePanel() 
         {
@@ -395,6 +409,11 @@
                 reader.readAsDataURL(file);
             }
         });
+
+
+        function signup(){
+            window.location.href = "signup.html";
+        }
 
 
         
